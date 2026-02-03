@@ -1,36 +1,42 @@
 #!/bin/bash
 
-
 USERID=$(id -u)
 
 if [ $USERID -ne 0 ]; then
   echo "Please run this script with root user access"
   exit 1
 fi
+#by default 
+VALIDATE(){
+echo "Installing Nginx"
+dnf install nginx -y
+if [ $1 -ne 0 ]; then
+  echo "$2... FAILURE"
+  exit 1
+else
+  echo "$2... SUCCESS"
+fi
 
+}
 echo "Installing Nginx"
 dnf install nginx -y
 
+VALIDATE $? "Nginx installtion"
+
+echo "Installing MariaDB (MySQL compatible)"
+dnf install mariadb105-server -y
 if [ $? -ne 0 ]; then
-  echo "Installing Nginx... FAILURE"
+  echo "Installing MariaDB... FAILURE"
   exit 1
 else
-  echo "Installing Nginx... SUCCESS"
+  echo "Installing MariaDB... SUCCESS"
 fi
 
-echo "Installing MySQL"
-dnf install mysql -y
-
+echo "Installing Node.js"
+dnf install nodejs -y
 if [ $? -ne 0 ]; then
-  echo "Installing MySQL... FAILURE"
+  echo "Installing Node.js... FAILURE"
   exit 1
 else
-  echo "Installing MySQL... SUCCESS"
+  echo "Installing Node.js... SUCCESS"
 fi
-
-if [ $? -ne 0 ]; then
-  echo "Installing nodejs... FAILURE"
-  exit 1
- else
-    echo "Installing nodejs... SUCCESS"
-fi    
